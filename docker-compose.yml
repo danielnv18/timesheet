@@ -31,9 +31,9 @@ services:
             POSTGRES_USER: '${DB_USERNAME}'
             POSTGRES_PASSWORD: '${DB_PASSWORD:-secret}'
         volumes:
-            - 'timesheetspostgresql:/var/lib/postgresql/data'
+            - 'timesheet-sql:/var/lib/postgresql/data'
         networks:
-            - timesheets
+            - timesheet
         healthcheck:
           test: ["CMD", "pg_isready", "-q", "-d", "${DB_DATABASE}", "-U", "${DB_USERNAME}"]
     redis:
@@ -41,9 +41,9 @@ services:
         ports:
             - '${FORWARD_REDIS_PORT:-6379}:6379'
         volumes:
-            - 'timesheetsredis:/data'
+            - 'timesheet-redis:/data'
         networks:
-            - timesheets
+            - timesheet
         healthcheck:
           test: ["CMD", "redis-cli", "ping"]
     mailhog:
@@ -52,12 +52,12 @@ services:
             - '${FORWARD_MAILHOG_PORT:-1025}:1025'
             - '${FORWARD_MAILHOG_DASHBOARD_PORT:-8025}:8025'
         networks:
-            - timesheets
+            - timesheet
 networks:
-    timesheets:
+    timesheet:
         driver: bridge
 volumes:
-    timesheetspostgresql:
+    timesheet-sql:
         driver: local
-    timesheetsredis:
+    timesheet-redis:
         driver: local
